@@ -17,41 +17,48 @@
 				<Row type="flex" justify="end" class="code-row-bg">
 					<Col span="4">
 
-						<Input v-model="value4" icon="ios-search" placeholder="请输入..." style="width: 200px"></Input>
+						<Input v-model="search" icon="ios-search" placeholder="请输入..." style="width: 200px"></Input>
 
 					</Col>
 					<Col span="4" :offset="1">
 
 						<Button-group shape="circle">
-							<Button icon="play" @click="startDomain" type="primary"></Button>
-							<Button icon="android-refresh" @click="restartDomain" type="primary"></Button>
-							<Button icon="pause" @click="shutdownDomain" type="primary"></Button>
-							<Button icon="ios-trash" @click="destroyDomain" type="primary"></Button>
-						</Button-group>
+							<!-- <Poptip
+							confirm
+							title="您确认删除这条内容吗？"
+							@on-ok="ok"
+							@on-cancel="cancel"> -->
+							
+							<Button icon="play" @click="multDomain('start')" type="primary"></Button>
+						<!-- </Poptip> -->
+						<Button icon="android-refresh" @click="multDomain('restart')" type="primary"></Button>
+						<Button icon="pause" @click="multDomain('shutdown')" type="primary"></Button>
+						<Button icon="ios-trash" @click="multDomain('destroy')" type="primary"></Button>
+					</Button-group>
 
 
 
-					</Col>
-				</Row>
+				</Col>
+			</Row>
 
 
-			</div>
+		</div>
 
-		</transition>
+	</transition>
 
 
-		<transition  appear name="zoom">
-			<div class="domainsform">
-				<Table :context="self" :data="tableData1" :columns="tableColumns1" stripe></Table>
-				<div style="padding: 20px;overflow: hidden">
-					<div style="float: right;">
-						<Page :total="100" :current="1" @on-change="changePage"></Page>
-					</div>
+	<transition  appear name="zoom">
+		<div class="domainsform">
+			<Table :context="self" :data="tableData1"  @on-selection-change="getSelection" :columns="tableColumns1" stripe></Table>
+			<div style="padding: 20px;overflow: hidden">
+				<div style="float: right;">
+					<Page :total="100" :current="1" @on-change="changePage"></Page>
 				</div>
-
 			</div>
-		</transition>
-	</div>
+
+		</div>
+	</transition>
+</div>
 </template>
 
 <script>
@@ -59,6 +66,8 @@
 		data () {
 			return {
 				self: this,
+				selectionids:'',
+				search:'',
 				tableData1: this.mockTableData1(),
 				tableColumns1: [
 				{
@@ -105,16 +114,16 @@
 			
 			{
 				title: '操作',
-				key: 'domianid',
+				key: 'domainid',
 				width: 300,
 				align: 'center',
 				render (row, column, index) {
 					return `<Button-group shape="circle">
-					<i-button icon="android-desktop"  @click="getVNC(${row.domianid})" type="ghost"></i-button>
-					<i-button icon="play" @click="startDomain(${row.domianid})" type="ghost"></i-button>
-					<i-button icon="android-refresh" @click="restartDomain(${row.domianid})" type="ghost"></i-button>
-					<i-button icon="pause" @click="shutdownDomain(${row.domianid})" type="ghost"></i-button>
-					<i-button icon="ios-trash" @click="destroyDomain(${row.domianid})" type="ghost"></i-button>
+					<i-button icon="android-desktop"  @click="getVNC(${row.domainid})" type="ghost"></i-button>
+					<i-button icon="play" @click="startDomain(${row.domainid})" type="ghost"></i-button>
+					<i-button icon="android-refresh" @click="restartDomain(${row.domainid})" type="ghost"></i-button>
+					<i-button icon="pause" @click="shutdownDomain(${row.domainid})" type="ghost"></i-button>
+					<i-button icon="ios-trash" @click="destroyDomain(${row.domainid})" type="ghost"></i-button>
 				</Button-group>
 				`;
 			}
@@ -130,7 +139,7 @@ methods: {
 				name: '虚拟机' + Math.floor(Math.random () * 100 + 1),
 				status: Math.floor(Math.random () * 3 + 1),
 				server: 'Server_' + Math.floor(Math.random () * 100 + 1),
-				domianid: Math.floor(Math.random () * 100 + 1),
+				domainid: Math.floor(Math.random () * 100 + 1),
 				domaininfo: 
 				{
 					flavor: 'flavor' + Math.floor(Math.random () * 100 + 1),
@@ -181,6 +190,31 @@ methods: {
 			this.$Notice.success({
 				title: '销毁虚拟机成功' + s
 			});
+		},
+		multDomain(s) {
+			this.$Notice.success({
+				title: '批量操作虚拟机' + s + '  ' + this.selectionids
+			});
+		},
+		getSelection(s) {
+			if (arguments[0].length > 0) {
+				this.selectionids = new Array();
+				for (var i=0;i<arguments[0].length;i++)
+				{
+					
+					console.log(arguments[0][i].domainid);
+					
+					this.selectionids.push(arguments[0][i].domainid);
+				}
+				console.log(this.selectionids);
+
+			}
+			else {
+				this.selectionids = new Array();
+
+			}
+			
+			
 		}
 	}
 }
