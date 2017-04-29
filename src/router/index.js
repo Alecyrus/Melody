@@ -27,7 +27,7 @@ export default new Router({
         },
         {
           path: 'domains',
-          component: Overview
+          component: Domain
         },
         {
           path: 'hosts',

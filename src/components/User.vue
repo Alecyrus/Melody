@@ -7,8 +7,8 @@
                     <Menu accordion active-name="overview"   :open-names="['1']" class="nagv" theme="dark" width="auto" @on-select="changeRouter">
                         <div class="layout-logo-left">
                             <transition  name="fade">
-                                <p :class="{ active: show}" >{{logoTitle}}
-                                </p>
+                                <a href="/" :class="{ active: show}" >{{logoTitle}}
+                                </a>
                             </transition>
                         </div>
                         <Submenu name="1">
@@ -45,7 +45,7 @@
                                     <span v-if="show"  class="layout-text">物理机</span>
                                 </transition>
                             </Menu-item>
-                            <Menu-item name="groups" v-if="userLevel >= 2" >
+                            <Menu-item name="groups" v-if="userLevel >= 1" >
                                 <Icon type="android-folder" :size="iconSize"></Icon>
                                 <transition  name="fade">
                                     <span v-if="show"  class="layout-text">项目机组</span>
@@ -72,13 +72,13 @@
                                     <span v-if="show"  class="layout-text">存储管理</span>
                                 </transition>
                             </Menu-item>
-                            <Menu-item name="flavors" v-if="userLevel >= 2">
+                            <Menu-item name="flavors" v-if="userLevel >= 1">
                                 <Icon type="ios-browsers" :size="iconSize"></Icon>
                                 <transition  name="fade">
                                     <span v-if="show"  class="layout-text">规格管理</span>
                                 </transition>
                             </Menu-item>
-                            <Menu-item name="images" v-if="userLevel >= 2">
+                            <Menu-item name="images" v-if="userLevel >= 1">
                                 <Icon type="soup-can" :size="iconSize"></Icon>
                                 <transition  name="fade">
                                     <span v-if="show"  class="layout-text">镜像管理</span>
@@ -148,23 +148,16 @@
 
 
                 </div>
-<!--                 <div class="layout-breadcrumb">
-                    <Breadcrumb>
-                        <Breadcrumb-item href="/user/overview">Home</Breadcrumb-item>
-                        <Breadcrumb-item href="/user">adsasd</Breadcrumb-item>
-                        <Breadcrumb-item></Breadcrumb-item>
-                    </Breadcrumb>
-                </div> -->
                 <div class="layout-content">
-                    <div class="layout-content-main">
+                    <!-- <div class="layout-content-main"> -->
 
                        <transition name="component-fade" mode="out-in">
                         <router-view></router-view>
                     </transition>
-                </div>
+               <!--  </div> -->
             </div>
             <div class="layout-copy">
-                2011-2016 &copy; TalkingData
+                Copyright &copy; 2017 HITNSLAB.
             </div>
         </i-col>
     </Row>
@@ -178,7 +171,7 @@
       return {
         spanLeft: 4,
         spanRight: 20,
-        userLevel: 3,
+        userLevel: 1,
         logoTitle: "Melody",
         show: true,
     }
@@ -234,15 +227,13 @@ components: {
         white-space: nowrap;
 
     }
-    .layout-breadcrumb{
-        padding: 10px 15px 0;
-    }
+    
     .layout-content{
-        min-height: 200px;
+        min-height: 600px;
         margin: 15px;
-        overflow: hidden;
-        background: #fff;
-        border-radius: 4px;
+        /*overflow: hidden;*/
+        /*background: #fff;*/
+        /*border-radius: 4px;*/
     }
     .layout-content-main{
         padding: 10px;
@@ -303,10 +294,17 @@ components: {
         z-index:7;
     }
 
-    p {
+    a {
         color: white;
-        font-family: "Broadway"; 
+        font-family: "Broadway";
+        margin: 10px auto;
     }
+    a:hover {
+        color: #dddddd;
+        margin-top: -1px;
+    }
+
+
     .ivu-col{
         transition: width .2s ease-in-out;
     }
