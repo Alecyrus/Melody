@@ -15,49 +15,113 @@
 			<div class="header">
 
 				<Row type="flex" justify="end" class="code-row-bg">
+
 					<Col span="4">
-
-						<Input v-model="search" icon="ios-search" placeholder="请输入..." style="width: 200px"></Input>
-
+						<Button @click="createDomainForm = true" size="large" type="primary" shape="circle" icon="plus">创建</Button>
+					</Col>
+					<Col span="4" :offset="10">
+						<Input  style="box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, .10), 0px 0px 8px 0px rgba(0, 0, 0, .04);width:200px" v-model="search" icon="ios-search" placeholder="请输入..." ></Input>
 					</Col>
 					<Col span="4" :offset="1">
-
 						<Button-group shape="circle">
-							<!-- <Poptip
-							confirm
-							title="您确认删除这条内容吗？"
-							@on-ok="ok"
-							@on-cancel="cancel"> -->
-							
 							<Button icon="play" @click="multDomain('start')" type="primary"></Button>
-						<!-- </Poptip> -->
-						<Button icon="android-refresh" @click="multDomain('restart')" type="primary"></Button>
-						<Button icon="pause" @click="multDomain('shutdown')" type="primary"></Button>
-						<Button icon="ios-trash" @click="multDomain('destroy')" type="primary"></Button>
-					</Button-group>
+							<!-- </Poptip> -->
+							<Button icon="android-refresh" @click="multDomain('restart')" type="primary"></Button>
+							<Button icon="pause" @click="multDomain('shutdown')" type="primary"></Button>
+							<Button icon="ios-trash" @click="multDomain('destroy')" type="primary"></Button>
+						</Button-group>
+						
+					</Col>
+				</Row>
 
-
-
-				</Col>
-			</Row>
-
-
-		</div>
-
-	</transition>
-
-
-	<transition  appear name="zoom">
-		<div class="domainsform">
-			<Table :context="self" :data="tableData1"  @on-selection-change="getSelection" :columns="tableColumns1" stripe></Table>
-			<div style="padding: 20px;overflow: hidden">
-				<div style="float: right;">
-					<Page :total="100" :current="1" @on-change="changePage"></Page>
-				</div>
 			</div>
 
-		</div>
-	</transition>
+		</transition>
+
+
+		<transition  appear name="zoom">
+			<div class="domainsform">
+				<Table :context="self" :data="tableData1"  @on-selection-change="getSelection" :columns="tableColumns1" stripe></Table>
+				<div style="padding: 20px;overflow: hidden">
+					<div style="float: right;">
+						<Page :total="100" :current="1" @on-change="changePage"></Page>
+					</div>
+				</div>
+
+			</div>
+		</transition>
+
+
+
+		<div >
+			<Modal
+			width="600"
+			v-model="createDomainForm"
+			@on-ok="createDomain"
+			@on-cancel="cancel">
+			<p slot="header" style="color:#E45340;text-align:start; padding-top:10px;font-size: 30px;height:40px;">
+				创建虚拟机
+			</p>
+			<Tabs value="name1">
+				<Tab-pane label="自ISO文件" name="name1">
+					<div>
+
+					<Form :model="formISO" :label-width="100"  style="height:200px;margin:20px; padding-right:100px;">
+						<Form-item label="虚拟机名称">
+							<Input v-model="formISO.newName" placeholder="请输入"></Input>
+						</Form-item>
+						<div label="ISO文件">
+							<Select   clearable v-model="formISO.newISO" placeholder="请选择">
+								<Option-group label="热门">
+									<Option v-for="item in isosHot" :value="item.value" :key="item">{{ item.label }}</Option>
+								</Option-group>
+								<Option-group label="Ubuntu">
+									<Option v-for="item in isosUbuntu" :value="item.value" :key="item">{{ item.label }}</Option>
+								</Option-group>
+								<Option-group label="Centos">
+									<Option v-for="item in isosCentos" :value="item.value" :key="item">{{ item.label }}</Option>
+								</Option-group>
+								<Option-group label="Windows">
+									<Option v-for="item in isosWindows" :value="item.value" :key="item">{{ item.label }}</Option>
+								</Option-group>
+							</Select>
+						</div>
+						<Form-item label="规格">
+								<Select filterable clearable v-model="formISO.newISO" placeholder="请选择">
+									<Option v-for="item in flavors" :value="item.value" :key="item">{{ item.label }}</Option>
+								</Select>
+						</Form-item>
+						<Form-item label="磁盘">
+							<Input v-model="formISO.newDisk" placeholder="请输入"></Input>
+						</Form-item>
+						<Form-item label="网络模式">
+							<Radio-group v-model="formISO.newNetwork">
+								<Radio label="NAT"></Radio>
+								<Radio label="Bridge"></Radio>
+							</Radio-group>
+						</Form-item>
+						<Form-item label="创建数量">
+							<Input v-model="formISO.newNumber" style="margin-bottom:40px;" placeholder="请输入"></Input>
+						</Form-item>
+					</Form>
+					</div>
+				</Tab-pane>
+				<Tab-pane label="自主机模板" name="name2">
+
+
+
+
+				</Tab-pane>
+				<Tab-pane label="克隆其他主机" name="name3">克隆其他主机</Tab-pane>
+			</Tabs>
+
+		</Modal>
+	</div>
+
+
+
+
+
 </div>
 </template>
 
@@ -68,6 +132,87 @@
 				self: this,
 				selectionids:'',
 				search:'',
+				createDomainForm: false,
+				flavors:[
+				{
+					value: '1',
+					label: "Core(3),Memory(2048MB) "
+				},
+				{
+					value: '2',
+					label: "Core(4),Memory(6666MB)"
+				},
+				{
+					value: '3',
+					label: "Core(2),Memory(7777MB)"
+				}
+
+				],
+				isosHot:[
+				{
+					value: 'ubuntu1404s',
+					label: "Ubuntu 14.04 LTS Server"
+				},
+				{
+					value: 'ubuntu1404d',
+					label: "Ubuntu 14.04 LTS Desktop"
+				},
+				{
+					value: 'centos6',
+					label: "Centos 6 x64"
+				},
+				{
+					value: 'windows10',
+					label: "Windows 10"
+				}
+				],
+				isosUbuntu:[
+				{
+					value: 'ubuntu1404s',
+					label: "Ubuntu 14.04 LTS Server"
+				},
+				{
+					value: 'ubuntu1404d',
+					label: "Ubuntu 14.04 LTS Desktop"
+				},
+				{
+					value: 'ubuntu1604s',
+					label: "Ubuntu 16.04 LTS Server"
+				},
+				{
+					value: 'ubuntu1604d',
+					label: "Ubuntu 16.04 LTS Desktop"
+				},
+				],
+				isosWindows:[
+				{
+					value: 'windows10',
+					label: "Windows 10"
+				},
+				{
+					value: 'windows7',
+					label: "Windows 7"
+				},
+				],
+				isosCentos:[
+				{
+					value: 'centos6',
+					label: "Centos 6"
+				},
+				{
+					value: 'centos7',
+					label: "Centos 7"
+				},
+				],
+				formISO: {
+					newName: '',
+					newISO: '',
+					newFlavor:'',
+					newDisk:0,
+					newNetwork:'',
+					newNumber:1
+
+				},
 				tableData1: this.mockTableData1(),
 				tableColumns1: [
 				{
@@ -165,58 +310,71 @@ methods: {
 		this.tableData1 = this.mockTableData1();
 	},
 
-		//ACTION
-		getVNC(s) {
-			this.$Notice.success({
-				title: '成功获取VNC地址' + s
-			});
-		},
-		startDomain(s) {
-			this.$Notice.success({
-				title: '成功开启虚拟机'  + s
-			});
-		},
-		restartDomain(s) {
-			this.$Notice.success({
-				title: '成功重启虚拟机' + s
-			});
-		},
-		shutdownDomain(s) {
-			this.$Notice.success({
-				title: '虚拟机关机成功' + s
-			});
-		},
-		destroyDomain(s) {
-			this.$Notice.success({
-				title: '销毁虚拟机成功' + s
-			});
-		},
-		multDomain(s) {
-			this.$Notice.success({
-				title: '批量操作虚拟机' + s + '  ' + this.selectionids
-			});
-		},
-		getSelection(s) {
-			if (arguments[0].length > 0) {
-				this.selectionids = new Array();
-				for (var i=0;i<arguments[0].length;i++)
-				{
-					
-					console.log(arguments[0][i].domainid);
-					
-					this.selectionids.push(arguments[0][i].domainid);
-				}
-				console.log(this.selectionids);
+	// Muti domains
+	getSelection(s) {
+		if (arguments[0].length > 0) {
+			this.selectionids = new Array();
+			for (var i=0;i<arguments[0].length;i++)
+			{
 
-			}
-			else {
-				this.selectionids = new Array();
+				console.log(arguments[0][i].domainid);
 
+				this.selectionids.push(arguments[0][i].domainid);
 			}
-			
-			
+			console.log(this.selectionids);
+
 		}
+		else {
+			this.selectionids = new Array();
+
+		}
+	},
+	multDomain(s) {
+		this.$Notice.success({
+			title: '批量操作虚拟机' + s + '  ' + this.selectionids
+		});
+	},
+
+	//Domain actions
+	getVNC(s) {
+		this.$Notice.success({
+			title: '成功获取VNC地址' + s
+		});
+	},
+	startDomain(s) {
+		this.$Notice.success({
+			title: '成功开启虚拟机'  + s
+		});
+	},
+	restartDomain(s) {
+		this.$Notice.success({
+			title: '成功重启虚拟机' + s
+		});
+	},
+	shutdownDomain(s) {
+		this.$Notice.success({
+			title: '虚拟机关机成功' + s
+		});
+	},
+	destroyDomain(s) {
+		this.$Notice.success({
+			title: '销毁虚拟机成功' + s
+		});
+	},
+	// create a domain
+	createDomain() {
+		this.$Notice.success({
+			title: '创建虚拟机成功'
+		});
+	},
+	cancel() {
+		this.$Notice.success({
+			title: '取消创建虚拟机'
+		});
 	}
+	
+	
+}
 }
 </script>
 
@@ -233,7 +391,7 @@ methods: {
 
 	}
 	.header {
-		margin-top: 20px;
+		margin-top: 40px;
 	}
 
 </style>
