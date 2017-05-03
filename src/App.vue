@@ -14,7 +14,7 @@
 
 <style>
   #app {
-    font-family: "Century Gothic","微软雅黑",Arial,sans-serif;
+    font-family: "微软雅黑",Arial,sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;

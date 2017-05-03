@@ -1,10 +1,10 @@
 <template>
-	<Form :model="formISO" :label-width="100"  style="height:200px;margin:20px; padding-right:100px;">
+	<Form  :model="form" :label-width="100" :rules="domainRule"  style="height:200px;margin:20px; padding-right:100px;">
 		<Form-item label="虚拟机名称">
-			<Input v-model="formISO.newName" placeholder="请输入"></Input>
+			<Input @on-change="getNewDomainInfo" v-model="form.newName" placeholder="请输入"></Input>
 		</Form-item>
 		<Form-item  label="ISO文件">
-			<Select  clearable v-model="formISO.newISO" placeholder="请选择">
+			<Select @on-change="getNewDomainInfo"  clearable v-model="form.newISO" placeholder="请选择">
 
 				<Option-group label="热门">
 					<Option v-for="item in isosHot" :value="item.value" :key="item">{{ item.label }}</Option>
@@ -21,23 +21,30 @@
 			</Select>
 		</Form-item>
 		<Form-item label="规格">
-			<Select filterable clearable v-model="formISO.newISO" placeholder="请选择">
-				<Option style="position: absolute !important;"  v-for="item in flavors" :value="item.value" :key="item">{{ item.label }}</Option>
+			<Select @on-change="getNewDomainInfo" filterable clearable v-model="form.newFlavor" placeholder="请选择">
+				<Option  v-for="item in flavors" :value="item.value" :key="item">{{ item.label }}</Option>
 			</Select>
 		</Form-item>
 		<Form-item label="磁盘">
-			<Input v-model="formISO.newDisk" placeholder="请输入"></Input>
-		</Form-item>
-		<Form-item label="网络模式">
-			<Radio-group v-model="formISO.newNetwork">
-				<Radio label="NAT"></Radio>
-				<Radio label="Bridge"></Radio>
-			</Radio-group>
-		</Form-item>
-		<Form-item label="创建数量">
-			<Input v-model="formISO.newNumber" style="margin-bottom:40px;" placeholder="请输入"></Input>
-		</Form-item>
-	</Form>
+			<Input @on-change="getNewDomainInfo" v-model="form.newDisk">
+				<span slot="append">GB</span>
+			</Input>
+		</Input>
+	</Form-item>
+	<Form-item  label="创建数量">
+		<Input-number :max="100" :min="1" @on-change="getNewDomainInfo" v-model="form.newNumber">
+			<span slot="append">个</span>
+		</Input-number>
+	</Form-item>
+
+	<Form-item label="网络模式">
+		<Radio-group @on-change="getNewDomainInfo" v-model="form.newNetwork">
+			<Radio label="NAT"></Radio>
+			<Radio label="Bridge"></Radio>
+		</Radio-group>
+	</Form-item>
+
+</Form>
 </template>
 
 <script>
@@ -122,27 +129,30 @@
 					label: "Centos 7"
 				},
 				],
-				formISO: {
+				form: {
 					newName: '',
 					newISO: '',
 					newFlavor:'',
-					newDisk:0,
+					newDisk:'',
 					newNetwork:'',
-					newNumber:1
+					newNumber:''
 
+				},
+				domainRule: {
+					newNumber: [
+						{ required: true, message: '请填写创建数量', trigger: 'blur' },
+          				{ type: 'number', range: [4,7], message: '密码长度不能小于4位', trigger: 'blur' }
+					]
 				}
+			}
+		},
+		methods: {
+			getNewDomainInfo() {
+				this.$emit('transferNewDomainInfo', this.form);
 			}
 		}
 	};
 
-
-	$("Form").on("click", ".ivu-select-dropdown", function() {
-		var that = this;
-		setTimeout(function() {
-			var dropdown = $(that).find(".ivu-select-dropdown");
-			dropdown.css({"position": "bsolute !important"});
-		}, 1);
-	});
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -232,6 +232,7 @@ components: {
         overflow: hidden;
         white-space: nowrap;
 
+
     }
     
     .layout-content{

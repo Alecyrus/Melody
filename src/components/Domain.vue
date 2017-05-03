@@ -64,15 +64,14 @@
 			</p>
 			<Tabs value="name1">
 				<Tab-pane label="自ISO文件" name="name1">
-					<FormIso></FormIso>
+					<FormIso @transferNewDomainInfo="setNewDomainInfo"></FormIso>
 				</Tab-pane>
 				<Tab-pane label="自主机模板" name="name2">
-
-
-
-
+					<FormTemplate @transferNewDomainInfo="setNewDomainInfo"></FormTemplate>
 				</Tab-pane>
-				<Tab-pane label="克隆其他主机" name="name3">克隆其他主机</Tab-pane>
+				<Tab-pane label="克隆其他主机" name="name3">
+					<FormDomain @transferNewDomainInfo="setNewDomainInfo"></FormDomain>
+				</Tab-pane>
 			</Tabs>
 
 		</Modal>
@@ -87,6 +86,8 @@
 
 <script>
 	import CreateDomainFromISO from "../modals/CreateDomainFromISO"
+	import CreateDomainFromTemplate from "../modals/CreateDomainFromTemplate"
+	import CreateDomainFromDomain from "../modals/CreateDomainFromDomain"
 	export default {
 		data () {
 			return {
@@ -94,6 +95,7 @@
 				selectionids:'',
 				search:'',
 				createDomainForm: false,
+				newDomainInfo: {},
 				tableData1: this.mockTableData1(),
 				tableColumns1: [
 				{
@@ -158,7 +160,9 @@
 	}
 },
 components: {
-	"FormIso": CreateDomainFromISO
+	"FormIso": CreateDomainFromISO,
+	"FormTemplate": CreateDomainFromTemplate,
+	"FormDomain": CreateDomainFromDomain
 },
 methods: {
 	mockTableData1 () {
@@ -248,16 +252,20 @@ methods: {
 	// create a domain
 	createDomain() {
 		this.$Notice.success({
-			title: '创建虚拟机成功'
+			title: '创建虚拟机成功' + this.newDomainInfo.newName
 		});
 	},
 	cancel() {
 		this.$Notice.success({
 			title: '取消创建虚拟机'
 		});
+	},
+	setNewDomainInfo(msg) {
+		this.newDomainInfo = msg;
+		this.$Notice.info({
+			title: '虚拟机信息' + msg.newName
+		});
 	}
-	
-	
 }
 }
 </script>
