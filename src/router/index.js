@@ -6,6 +6,7 @@ import Login from '@/components/Login'
 import Overview from '@/components/Overview'
 import Domain from '@/components/Domain'
 import User from '@/components/User'
+import UserInfo from '@/components/UserInfo'
 
 Vue.use(Router)
 
@@ -75,7 +76,7 @@ export default new Router({
         },
         {
           path: 'userinfo',
-          component: Overview
+          component: UserInfo
         },
         {
           path: 'settings',
