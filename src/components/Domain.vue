@@ -17,15 +17,20 @@
 				<Row type="flex" justify="end" class="code-row-bg">
 
 					<Col span="4">
-						<Button @click="createDomainForm = true" size="large" type="primary" shape="circle" icon="plus">创建</Button>
+						<Poptip trigger="hover" content="启动一个虚拟机实例" placement="top-start">
+						<Button style="box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, .20), 0px 0px 8px 0px rgba(0, 0, 0, .04);"  @click="createDomainForm = true" size="large" type="primary" shape="circle" icon="plus">创建</Button>
+						</Poptip>
 					</Col>
 					<Col span="4" :offset="10">
+					<Poptip trigger="hover" content="根据名称模糊搜索" placement="top-start">
 						<Input  style="box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, .10), 0px 0px 8px 0px rgba(0, 0, 0, .04);width:200px" v-model="search" icon="ios-search" placeholder="请输入..." ></Input>
+						</Poptip>
 					</Col>
 					<Col span="4" :offset="1">
 						<Button-group shape="circle">
+	
 							<Button icon="play" @click="multDomain('start')" type="primary"></Button>
-							<!-- </Poptip> -->
+	
 							<Button icon="android-refresh" @click="multDomain('restart')" type="primary"></Button>
 							<Button icon="pause" @click="multDomain('shutdown')" type="primary"></Button>
 							<Button icon="ios-trash" @click="multDomain('destroy')" type="primary"></Button>
@@ -284,6 +289,12 @@ methods: {
 	}
 	.header {
 		margin-top: 40px;
+	}
+
+	.ivu-modal-header {
+		box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, .10), 0px 0px 8px 0px rgba(0, 0, 0, .04);
+
+
 	}
 
 </style>

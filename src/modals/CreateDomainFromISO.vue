@@ -135,7 +135,7 @@
 					newFlavor:'',
 					newDisk:'',
 					newNetwork:'',
-					newNumber:''
+					newNumber:1
 
 				},
 				domainRule: {
